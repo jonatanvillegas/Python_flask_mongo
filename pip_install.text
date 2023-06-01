@@ -1,0 +1,5 @@
+paquetes instalados para los proyectos 
+
+certifi
+pymongo
+pymongo[srv]
