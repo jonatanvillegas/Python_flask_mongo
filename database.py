@@ -8,7 +8,7 @@ ca = certifi.where()
 #Funcion para conectarse a mongo con los paquetes instalados 
 def conection_db():
     try:
-        client = MongoClient.connet(MONGO_URI, tlsCAFILE = ca)
+        client = MongoClient(MONGO_URI, tlsCAFile = ca)
         db = client['dbd_CRUD']
     except ConnectionError:
         print('Error al  conectarse')
