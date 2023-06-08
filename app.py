@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, Response, jsonify, redirect,url_for
+from flask import Flask, render_template, request, jsonify, redirect,url_for, Response
 import database as dbase
 from producto import Producto
 
@@ -9,27 +9,29 @@ app = Flask(__name__)
 @app.route('/')
 #buscando el archivo en la carpeta template importada de flask 
 def inicio():
-    productos = db['productos']
-    TodoslosProductos = productos.find()
-    return render_template('index.html', TodoslosProductos)
+    TablaP = db['productos']
+    TodoslosProductos = TablaP.find()
+    return render_template('index.html', productos=TodoslosProductos)
 
 
 #Metodo POST
 @app.route('/products', methods=['POST'])
 def agregarProducto():
     #creanndo la coleccion en la base de datos 
-    productos = db['productos']
+    TablaP = db['productos']
     #obteniendo los datos de un Form 
     name = request.form['name']
     description = request.form['description']
     price = request.form['price']
 
-    if name and description and price :
+    #validando si los datos existen
+    if name and description and price:
         #creando el objeto  
         producto = Producto(name, description, price)
         #agregando el producto en la tabla con su esquema
-        productos.insert_one(producto.EsquemaTablaProducto())
-        Response = jsonify({
+        TablaP.insert_one(producto.__dict__)
+
+        response = jsonify({
             'name': name,
             'description': description,
             'price': price
@@ -41,9 +43,9 @@ def agregarProducto():
 #Metodo DELETE
 @app.route('/delete/<string:product_name>')
 def eliminarProducto(product_name):
-    productos = db['productos']
-    productos.delete_one({'name': product_name})
-    redirect(url_for('inicio'))
+    TablaP = db['productos']
+    TablaP.delete_one({'name': product_name})
+    return redirect(url_for('inicio'))
 
 #Metodo PUT
 @app.route('/edit/<string:product_name>', methods=['POST'])
@@ -55,7 +57,7 @@ def EditarProducto(product_name):
 
     if name and description and price:
         productos.update_one({'name': product_name}, {'$set': {'name': name, 'description': description, 'price': price}})
-        Response = jsonify({'message': 'Producto' + product_name + 'Actualizado Correctamente'})
+        response = jsonify({'message': 'Producto' + product_name + 'Actualizado Correctamente'})
         return redirect(url_for('inicio'))
     else :
         return notFound()
@@ -66,8 +68,8 @@ def notFound(error=None):
         'message': 'No encontrado' + request.url,
         'status': '404'
     }
-    Response = jsonify(message)
-    Response.status_code = 404
+    response = jsonify(message)
+    response.status_code = 404
     return Response
 
 
