@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="es">
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -23,7 +23,46 @@
                         </h5>
                     </div>
                     <div class="card-body">
-                        <form action="/products" method="post"></form>
+                        <form action="/products" method="post">
+                             <label>Name</label>
+                             <input type="text" class="form-control mb-3" name="name">
+                             <label>Description</label>
+                             <input type="text" class="form-control mb-3" name="description">
+                             <label>Price</label>
+                             <input type="text" class="form-control mb-3" name="price">
+                             <button class="btn btn-primary" type="submit">Guardar</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="card">
+                    <div class="car-header">
+                        <h5 class="text-center">Productos</h5>
+
+                    </div>
+                    <div class="card-body">
+                        <ul class="list-group">
+                          <div class="row row-col-2 row-cols-sm-2 row-cols-md-3 row-cols-lg-3 ">
+                            {% for producto in productos %}
+
+                                <div class="col ">
+                                    <li class="list-group-item mb-3">
+                                        <form action="/edit/{{producto.name}}" method="POST">
+                                            <input type="text" class="form-control" value="{{producto.name}}" name="name">
+                                            <small>Price</small>
+                                            <input type="text" class="form-control" value="{{producto.price}}" name="price">
+                                            <small>Description</small>
+                                            <input type="text" class="form-control" value="{{producto.description}}" name="description">
+                                            <button class="btn btn-primary btn-sm mt-3" type="submit">Editar</button>
+                                            <a href="/delete/{{producto.name}}"> Eliminar</a>
+                                        </form>
+                                    </li>
+                                </div> 
+                                
+                             {% endfor %} 
+                          </div>
+                        </ul>
                     </div>
                 </div>
             </div>
