@@ -1,14 +1,17 @@
 from pymongo import MongoClient
+from dotenv import dotenv_values
 import certifi
 
-#importando paquetes para la coneccion a mongo 
-MONGO_URI = 'mongodb+srv://jv2208674:#puteria@pythonflask.evxx3an.mongodb.net/?retryWrites=true&w=majority'
+
+config = dotenv_values('.env')
+
 ca = certifi.where()
 
+MONGO_URL = config['MONGO_URI']
 #Funcion para conectarse a mongo con los paquetes instalados 
 def conection_db():
     try:
-        client = MongoClient(MONGO_URI, tlsCAFile = ca)
+        client = MongoClient(MONGO_URL, tlsCAFile = ca)
         db = client['dbd_CRUD']
     except ConnectionError:
         print('Error al  conectarse')
